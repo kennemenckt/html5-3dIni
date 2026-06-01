@@ -1,8 +1,17 @@
 import Camera3D from "./camera3d.js";
 import KeyboardAdapter from "./keyboardAdapter.js";
 
+/**
+ * This class provides a mechanism to control a camera
+ * using the keyboard predefined mappings
+ */
 export default class Camera3DController {
     _camera3D;
+    /**
+     * Set of listeners that will be executed when
+     * the refreshCamera method is executed
+     */
+    _refreshListeners = new Set();
 
     /**
      * This objects configures the required keyboard event listeners to controll the camera
@@ -16,7 +25,7 @@ export default class Camera3DController {
     }
 
     /**
-     * Binds key listeners to actions
+     * Binds key listeners to actions to perform the camera movements
      * 
      * @param {KeyboardAdapter} keyboardAdapter 
      */
@@ -41,67 +50,62 @@ export default class Camera3DController {
 
     doSlideForwards() {
         this._camera3D.slideForwards();
-        this.refreshCamera();
     }
 
     doSlideBackwards() {
         this._camera3D.slideBackwards();
-        this.refreshCamera();
     }
 
     doSlideRight() {
         this._camera3D.slideRight();
-        this.refreshCamera();
     }
 
     doSlideLeft() {
         this._camera3D.slideLeft();
-        this.refreshCamera();
     }
 
     doRotateRight() {
         this._camera3D.rotateRight(1);
-        this.refreshCamera();
     }
 
     doRotateLeft() {
         this._camera3D.rotateLeft(-1);
-        this.refreshCamera();
     }
 
     doSlideUp() {
         this._camera3D.slideUp();
-        this.refreshCamera();
     }
 
     doSlideDown() {
         this._camera3D.slideDown();
-        this.refreshCamera();
     }
 
     doTiltUp() {
         this._camera3D.tiltUp();
-        this.refreshCamera();
     }
 
     doTiltDown() {
         this._camera3D.tiltDown();
-        this.refreshCamera();
     }
     
     doIncreaseVision() {
         this._camera3D.increaseVision();
-        this.refreshCamera();
     }
 
     doDecreaseVision() {
         this._camera3D.decreaseVision();
-        this.refreshCamera();
     }
 
     refreshCamera() {
         this._camera3D.clearViewport();
         this._camera3D.drawGridFloatingFloor();
         console.log(this._camera3D);
+        for(const refreshListener of this._refreshListeners) {
+            refreshListener.refreshOnCamera(this._camera3D);
+        }
+    }
+
+    addRefreshListener(refreshListener) {
+        this._refreshListeners.add(refreshListener);
     }
 }

@@ -8,16 +8,23 @@ export default class KeyboardAdapter {
         
         document.addEventListener('keydown', (event) => {
             this.pressedKeys.add(event.code);
-            this.keyPressedHandler();
         });
 
         document.addEventListener('keyup', (event) => {
             this.pressedKeys.delete(event.code);
-            this.keyPressedHandler();
         })
     }
 
-    keyPressedHandler() {
+    keyPressedHandler(keyCode) {
+        var listeners = this.listenersMap.get(keyCode);
+        if (listeners != undefined) {
+            for (const listener of listeners) {
+                listener();
+            }
+        }
+    }
+
+    keyPressedDetector() {
         for(const keyCode of this.pressedKeys) {
             var listeners = this.listenersMap.get(keyCode);
             if (listeners != undefined) {

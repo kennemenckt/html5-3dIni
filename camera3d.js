@@ -11,6 +11,7 @@ export default class Camera3D {
     _movementSpeed;
     _graphAdapter;
     _rad;
+    _floorColor;
 
     /**
      * This object represents a camera inside the 3D world
@@ -31,6 +32,7 @@ export default class Camera3D {
         this._viewport = viewport;
         this._movementSpeed = movementSpeed;
         this._graphAdapter = graphAdapter;
+        this._floorColor = "#0000FF"
     }
 
     get position() {
@@ -41,21 +43,21 @@ export default class Camera3D {
     }
 
     get visionAngle() {
-        return this._visionAngle;
+        return this._visionAngle * this._rad;
     }
     set visionAngle(value) {
         this._visionAngle = value;
     }
 
     get orientationAngle() {
-        return this._orientationAngle;
+        return this._orientationAngle * this._rad;
     }
     set orientationAngle(value) {
         this._orientationAngle = value;
     }
 
     get tiltAngle() {
-        return this._tiltAngle;
+        return this._tiltAngle * this._rad;
     }
     set tiltAngle(value) {
         this._tiltAngle = value;
@@ -80,6 +82,13 @@ export default class Camera3D {
     }
     set graphAdapter(value) {
         this._graphAdapter = value;
+    }
+
+    get floorColor() {
+        return this._floorColor;
+    }
+    set floorColor(value) {
+        this._floorColor = value;
     }
 
     /**
@@ -281,7 +290,7 @@ export default class Camera3D {
             for (var x = floorSection * -1; x <= floorSection; x+=2)
             {
                 var p3d = new Point3D(x, 0, z);
-                this.draw3DPoint(p3d, "#000000");
+                this.draw3DPoint(p3d, this._floorColor);
             }
         }
     }
@@ -292,12 +301,50 @@ export default class Camera3D {
     drawDottedFloatingFloor() {
         var floorSize = 500;
         var floorSection = floorSize / 2;
-        for (var z = this._position.z - floorSection; z <= this._position.z + floorSection; z+=2)
+        var gridSize = 3;
+        var zAbsolute = Math.trunc(this._position._z / gridSize) * gridSize;
+        var xAbsolute = Math.trunc(this._position._x / gridSize) * gridSize;
+        for (var z = zAbsolute - floorSection; z <= zAbsolute + floorSection; z+=gridSize)
         {
-            for (var x = this._position.x - floorSection; x <= this._position.x + floorSection; x+=2)
+            for (var x = xAbsolute - floorSection; x <= xAbsolute + floorSection; x+=gridSize)
             {
-                var p3d = new Point3D(Math.fround(x), 0, Math.fround(z));
-                this.draw3DPoint(p3d, "#000000");
+                var p3d = new Point3D(x, 0, z);
+                this.draw3DPoint(p3d, this._floorColor);
+            }
+        }
+    }
+
+    /**
+     * Draws a squared floor at ground level around the camera
+     */
+    drawSquaredFloatingFloor() {
+        var floorSize = 500;
+        var floorSection = floorSize / 2;
+        var gridSize = 3;
+        var zAbsolute = Math.trunc(this._position._z / gridSize) * gridSize;
+        var xAbsolute = Math.trunc(this._position._x / gridSize) * gridSize;
+
+        var p3D_1;
+        var p3D_2;
+        for (var z = zAbsolute - floorSection; z <= zAbsolute + floorSection; z+=gridSize)
+        {
+            for (var x = xAbsolute - floorSection; x <= xAbsolute + floorSection; x+=gridSize)
+            {
+                p3D_1 = new Point3D(x, 0, z);
+                p3D_2 = new Point3D(x + 1, 0, z);
+                this.draw3DLine(p3D_1, p3D_2, this._floorColor);
+                
+                p3D_1 = new Point3D(x + 1, 0, z);
+                p3D_2 = new Point3D(x + 1, 0, z + 1);
+                this.draw3DLine(p3D_1, p3D_2, this._floorColor);
+
+                p3D_1 = new Point3D(x + 1, 0, z + 1);
+                p3D_2 = new Point3D(x, 0, z + 1);
+                this.draw3DLine(p3D_1, p3D_2, this._floorColor);
+
+                p3D_1 = new Point3D(x, 0, z + 1);
+                p3D_2 = new Point3D(x, 0, z);
+                this.draw3DLine(p3D_1, p3D_2, this._floorColor);
             }
         }
     }
@@ -312,13 +359,13 @@ export default class Camera3D {
         {
             var p3d1 = new Point3D(-floorSection, 0, z);
             var p3d2 = new Point3D(floorSection, 0, z);
-            this.draw3DLine(p3d1, p3d2, "#000000");
+            this.draw3DLine(p3d1, p3d2, this._floorColor);
         }
         for (var x = floorSection * -1; x <= floorSection; x+=5)
         {
             var p3d1 = new Point3D(x, 0, -floorSection) ;
             var p3d2 = new Point3D(x, 0, floorSection);
-            this.draw3DLine(p3d1, p3d2, "#000000");
+            this.draw3DLine(p3d1, p3d2, this._floorColor);
         }
     }
 
@@ -326,7 +373,7 @@ export default class Camera3D {
      * Draws a grid floor at ground level around the camera
      */
     drawGridFloatingFloor() {
-        var floorSize = 200;
+        var floorSize = 500;
         var floorSection = floorSize / 2;
         var gridSize = 5;
         var zAbsolute = Math.trunc(this._position._z / gridSize) * gridSize;
@@ -335,13 +382,13 @@ export default class Camera3D {
         {
             var p3d1 = new Point3D(xAbsolute - floorSection, 0, z);
             var p3d2 = new Point3D(xAbsolute + floorSection, 0, z);
-            this.draw3DLine(p3d1, p3d2, "#000000");
+            this.draw3DLine(p3d1, p3d2, this._floorColor);
         }
         for (var x = xAbsolute - floorSection; x <= xAbsolute + floorSection; x += gridSize)
         {
             var p3d1 = new Point3D(x, 0, zAbsolute - floorSection) ;
             var p3d2 = new Point3D(x, 0, zAbsolute + floorSection);
-            this.draw3DLine(p3d1, p3d2, "#000000");
+            this.draw3DLine(p3d1, p3d2, this._floorColor);
         }
     }
 
@@ -441,5 +488,9 @@ export default class Camera3D {
 
     decreaseVision() {
         this._visionAngle-= (5/this._rad);
+    }
+
+    formatCameraData() {
+        return "x: " + this._position.x
     }
 }

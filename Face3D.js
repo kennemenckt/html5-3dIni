@@ -6,7 +6,7 @@ export default class Face3D {
         this._vertexIndexes = value;
     }
     get vertexIndexes() {
-        return this.vertexIndexes;
+        return this._vertexIndexes;
     }
 
     set vertexes(value) {
@@ -14,5 +14,16 @@ export default class Face3D {
     }
     get vertexes() {
         return this._vertexes;
+    }
+
+    addVertex(vertexIndex, vertex) {
+        if(!this._vertexIndexes) {
+            this.vertexIndexes = [];
+        }
+        if(!this._vertexes) {
+            this._vertexes = [];
+        }
+        this._vertexes.push(vertex);
+        this._vertexIndexes.push(vertexIndex);
     }
 }
