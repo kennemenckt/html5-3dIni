@@ -7,6 +7,7 @@ import KeyboardAdapter from "./keyboardAdapter.js";
  */
 export default class Camera3DController {
     _camera3D;
+    _refreshingCamera;
     /**
      * Set of listeners that will be executed when
      * the refreshCamera method is executed
@@ -20,6 +21,7 @@ export default class Camera3DController {
      */
     constructor(camera3D, keyboardAdapter) {
         this._camera3D = camera3D;
+        this._refreshingCamera = false;
 
         this.bindKeyboardListeners(keyboardAdapter);
     }
@@ -97,12 +99,19 @@ export default class Camera3DController {
     }
 
     refreshCamera() {
+        if (this._refreshingCamera) {
+            return;
+        }
+        this._refreshingCamera = true;
+        
         this._camera3D.clearViewport();
         this._camera3D.drawGridFloatingFloor();
         console.log(this._camera3D);
         for(const refreshListener of this._refreshListeners) {
             refreshListener.refreshOnCamera(this._camera3D);
         }
+
+        this._refreshingCamera = false;
     }
 
     addRefreshListener(refreshListener) {
