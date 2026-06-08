@@ -19,10 +19,27 @@ function main() {
   cameraController.refreshCamera();
   var objects = [];
   readfile(objects, cameraController);
-  window.setInterval(() => {
-    cameraController.refreshCamera();
+  var fpsRange = document.getElementById("fps");
+  var fpsLabel = document.getElementById("fpsLabel");
+  fpsRange.value = 50;
+  fpsLabel.textContent = `FPS: ${fpsRange.value}`;
+  
+  var fpsInterval = window.setInterval(() => {
     keyboardAdapter.keyPressedDetector();
+    cameraController.refreshCamera();
   }, refreshRatio);
+  
+  fpsRange.addEventListener("change", () => {
+    fpsLabel.textContent = `FPS: ${fpsRange.value}`;
+
+    refreshRatio = 1000/fpsRange.value;
+    clearInterval(fpsInterval);
+
+    fpsInterval = window.setInterval(() => {
+      keyboardAdapter.keyPressedDetector();
+      cameraController.refreshCamera();
+    }, refreshRatio);
+  });
 }
 
 function readfile(objects, cameraController) {

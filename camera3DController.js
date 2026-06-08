@@ -48,6 +48,9 @@ export default class Camera3DController {
 
         keyboardAdapter.addKeyPressedListener("NumpadMultiply", () => this.doIncreaseVision());
         keyboardAdapter.addKeyPressedListener("NumpadDivide", () => this.doDecreaseVision());
+
+        keyboardAdapter.addKeyPressedListener("NumpadAdd", () => this.doIncreaseMovementSpeed());
+        keyboardAdapter.addKeyPressedListener("NumpadSubtract", () => this.doDecreaseMovementSpeed());
     }
 
     doSlideForwards() {
@@ -98,15 +101,24 @@ export default class Camera3DController {
         this._camera3D.decreaseVision();
     }
 
+    doIncreaseMovementSpeed() {
+        this._camera3D.increaseMovementSpeed();
+    }
+
+    doDecreaseMovementSpeed() {
+        this._camera3D.decreaseMovementSpeed();
+    }
+
     refreshCamera() {
         if (this._refreshingCamera) {
+            console.log("Refreshing in progress, skipping call...");
             return;
         }
         this._refreshingCamera = true;
         
         this._camera3D.clearViewport();
         this._camera3D.drawGridFloatingFloor();
-        console.log(this._camera3D);
+        
         for(const refreshListener of this._refreshListeners) {
             refreshListener.refreshOnCamera(this._camera3D);
         }

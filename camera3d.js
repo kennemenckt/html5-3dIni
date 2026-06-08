@@ -106,7 +106,7 @@ export default class Camera3D {
 
         // Perform camera rotations
         aux.rotateXZ(this._orientationAngle * -1);
-        aux.rotateYZ(this._tiltAngle * -1)
+        aux.rotateYZ(this._tiltAngle * -1);
 
         // Calculate TETA angle
         var teta;
@@ -490,7 +490,11 @@ export default class Camera3D {
         this._visionAngle-= (5/this._rad);
     }
 
-    formatCameraData() {
-        return "x: " + this._position.x
+    increaseMovementSpeed() {
+        this._movementSpeed ++;
+    }
+
+    decreaseMovementSpeed() {
+        this._movementSpeed--;
     }
 }
