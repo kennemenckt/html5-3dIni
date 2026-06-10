@@ -3,10 +3,48 @@
     <head>
         <title>3D INI</title>
         <script type="module" src="main.js"></script>
+        <script>
+            function showModal() {
+                document.getElementById("help").showModal();
+            }
+            function closeModal() {
+                document.getElementById("help").close();
+            }
+        </script>
+        <style>
+            table {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                border: 1px solid #ddd;
+                padding: 5px;
+            }
+
+            tr:nth-child(even){background-color: #f2f2f2;}
+
+            tr:hover {background-color: #ddd;}
+
+            th {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                text-align: center;
+                background-color: #0000FF;
+                color: white;
+            }
+            
+            dialog {
+                background-color: #ffffff;
+            }
+        </style>
     </head>
     <body>
-
         <canvas id="myCanvas" width="1800" height="700" style="border:1px solid black"></canvas>
+        <div style="padding: 2px;">
+            <button onclick="showModal()" style="background-color: #FF0000; color: yellow;"><b>?</b></button>
+        </div>
         <div style="padding: 2px;">
             <label for="fileInput">Load 3D file:</label>
             <input type="file" id="fileInput">
@@ -17,6 +55,77 @@
             <label for="camInfo">Camera:</label>
             <input type="text" id="camInfo" size="65">
         </div>
+        <dialog id="help">
+            <h2>Help</h2>
+            <p><b>Command list:</b></p>
+            <table>
+                <tr>
+                    <th>Key</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>ArrowUp</td>
+                    <td>Move forward</td>
+                </tr>
+                <tr>
+                    <td>ArrowDown</td>
+                    <td>Move backward</td>
+                </tr>
+                <tr>
+                    <td>ArrowLeft</td>
+                    <td>Slide left</td>
+                </tr>
+                <tr>
+                    <td>ArrowRight</td>
+                    <td>Slide right</td>
+                </tr>
+                <tr>
+                    <td>KeyD</td>
+                    <td>Rotate right</td>
+                </tr>
+                <tr>
+                    <td>KeyA</td>
+                    <td>Rotate left</td>
+                </tr>
+                <tr>
+                    <td>KeyW</td>
+                    <td>Tilt up</td>
+                </tr>
+                <tr>
+                    <td>KeyS</td>
+                    <td>Tilt down</td>
+                </tr>
+                <tr>
+                    <td>KeyR</td>
+                    <td>Increase height</td>
+                </tr>
+                <tr>
+                    <td>KeyF</td>
+                    <td>Decrease height</td>
+                </tr>
+                <tr>
+                    <td>NumpadMultiply</td>
+                    <td>Increase vision angle</td>
+                </tr>
+                <tr>
+                    <td>NumpadDivide</td>
+                    <td>Decrease vision angle</td>
+                </tr>
+                <tr>
+                    <td>NumpadAdd</td>
+                    <td>Increase movement speed</td>
+                </tr>
+                <tr>
+                    <td>NumpadSubtract</td>
+                    <td>Decrease movement speed</td>
+                </tr>
+            </table>
+            <p><b>Load 3D file:</b></p>
+            <p>Supports uploading 3D object file in the OBJ format, i.e. defining vertices and faces geometry information about the object</p>
+            <div style="padding: 5px;">
+                <button id="closeModalBtn" onclick="closeModal()">Close</button>
+            </div>
+        </dialog>
 
     </body>
 </html>
